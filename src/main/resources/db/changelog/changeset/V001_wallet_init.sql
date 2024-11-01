@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS wallet
+(
+    id         UUID PRIMARY KEY NOT NULL,
+    balance    NUMERIC(15, 2)   NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    version    BIGINT    DEFAULT 0
+);
