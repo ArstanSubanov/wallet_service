@@ -4,3 +4,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: user
     password: password
+
+retryable:
+  max-attempts: 5
+  delay: 5000

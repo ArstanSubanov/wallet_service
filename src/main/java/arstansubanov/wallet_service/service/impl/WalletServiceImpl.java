@@ -17,7 +17,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Slf4j
@@ -32,29 +31,21 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    @Retryable(retryFor = OptimisticLockException.class, maxAttempts = 3, backoff = @Backoff(delay = 5000))
+    @Retryable(retryFor = OptimisticLockException.class,
+            maxAttemptsExpression = "${retryable.max-attempts}",
+            backoff = @Backoff(delayExpression = "${retryable.delay}"))
     public WalletDto updateWallet(WalletUpdateRequest request) {
         Wallet wallet = findWalletById(request.walletId());
         Operation operation = operationRegistry.getOperation(request.operationType());
         wallet = operation.calculateBalance(wallet, request.amount());
         walletRepository.save(wallet);
+        log.debug("Updated wallet {}", wallet);
         return walletMapper.toWalletDto(wallet);
     }
 
     @Override
     public WalletDto getWalletById(UUID id) {
         return walletMapper.toWalletDto(findWalletById(id));
-    }
-
-    @Transactional
-    @Override
-    public WalletDto createWallet() {
-        Wallet wallet = Wallet.builder()
-                .balance(BigDecimal.ZERO)
-                .build();
-        walletRepository.save(wallet);
-        log.info("Wallet created {}", wallet.getId());
-        return walletMapper.toWalletDto(wallet);
     }
 
     private Wallet findWalletById(UUID id) {

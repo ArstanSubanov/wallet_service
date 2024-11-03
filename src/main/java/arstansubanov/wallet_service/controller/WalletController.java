@@ -30,9 +30,4 @@ public class WalletController {
     public WalletDto getWallet(@PathVariable UUID id) {
         return walletService.getWalletById(id);
     }
-
-    @PostMapping("/create")
-    public WalletDto createWallet() {
-        return walletService.createWallet();
-    }
 }

@@ -10,6 +10,4 @@ public interface WalletService {
     WalletDto updateWallet(WalletUpdateRequest request);
 
     WalletDto getWalletById(UUID id);
-
-    WalletDto createWallet();
 }
